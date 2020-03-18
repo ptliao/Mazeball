@@ -4,6 +4,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mazeball/Elements/ball.dart';
 import 'package:mazeball/Views/base/baseView.dart';
 import 'package:mazeball/Views/base/viewSwtichMessage.dart';
 import 'package:mazeball/Views/viewManager.dart';
@@ -39,21 +40,67 @@ class _GameWidgetState extends State<GameWidget> {
   }
 }
 
+class Contan extends ContactListener {
+// 开始碰撞后操作碰撞userData来改变数据
+  @override
+  void beginContact(Contact contact) {
+    // TODO: implement beginContact
+    Body bodyA = contact.fixtureA.getBody();
+    Body bodyB = contact.fixtureB.getBody();
+    if(bodyA.userData is Ball){
+
+    }
+//    b2Body* bodyA = contact->GetFixtureA()->GetBody();
+//    b2Body* bodyB = contact->GetFixtureB()->GetBody();
+//    CCSprite* spriteA = (CCSprite*)bodyA->GetUserData();
+//    CCSprite* spriteB = (CCSprite*)bodyB->GetUserData();
+//
+//    //更改碰撞体颜色
+//    if (spriteA != NULL && spriteB != NULL)
+//    {
+//    spriteA.color = ccMAGENTA;
+//    spriteB.color = ccMAGENTA;
+//    }
+  }
+
+  @override
+  void endContact(Contact contact) {
+    // TODO: implement endContact
+  }
+
+  @override
+  void postSolve(Contact contact, ContactImpulse impulse) {
+    // TODO: implement postSolve
+  }
+
+  @override
+  void preSolve(Contact contact, Manifold oldManifold) {
+    // TODO: implement preSolve
+  }
+}
+
 class MazeBallGame extends Game {
   //Needed for Box2D
   static const int WORLD_POOL_SIZE = 100;
   static const int WORLD_POOL_CONTAINER_SIZE = 10;
+
   //Main physic object -> our game world
   World world;
+
   //Zero vector -> no gravity
-  final Vector2 _gravity = Vector2.zero();
+// 设置重力加速度 0.02
+  final Vector2 _gravity = new Vector2(0, -0.02); //Vector2.zero();
   //Scale factore for our world
   final int scale = 5;
+
   //Size of the screen from the resize event
   Size screenSize;
+
   //Rectangle based on the size, easy to use
   Rect _screenRect;
+
   Rect get screenRect => _screenRect;
+
   //Handle views and transition between
   ViewManager _viewManager;
 
@@ -63,6 +110,7 @@ class MazeBallGame extends Game {
   MazeBallGame({GameView startView = GameView.Playing}) {
     world = new World.withPool(
         _gravity, DefaultWorldPool(WORLD_POOL_SIZE, WORLD_POOL_CONTAINER_SIZE));
+    world.setContactListener(Contan());
     initialize(startView: startView);
   }
 
@@ -75,8 +123,7 @@ class MazeBallGame extends Game {
   }
 
   void resize(Size size) {
-    if(blockResize && screenSize !=null)
-    {
+    if (blockResize && screenSize != null) {
       return;
     }
     //Store size and related rectangle
@@ -115,14 +162,13 @@ class MazeBallGame extends Game {
     if (state != AppLifecycleState.resumed) {
       pauseGame = true;
       Wakelock.disable();
-    }
-    else{
+    } else {
       Wakelock.enable();
       pauseGame = false;
     }
   }
 
-  void sendMessageToActiveState(ViewSwitchMessage message) async{
+  void sendMessageToActiveState(ViewSwitchMessage message) async {
     _viewManager.activeView?.setActive(message: message);
   }
 

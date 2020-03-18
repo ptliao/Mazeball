@@ -31,10 +31,18 @@ class Wall {
     body = game.world.createBody(bd);
     body.userData = this; //save a ref to the current object
     //Define body properties like weight and density
+//    https://blog.csdn.net/linmy1211/article/details/39080875
     FixtureDef fd = FixtureDef();
+    // fixture的密度用来计算父物体的质量属性。密度值可以为零或者是整数。你所有的fixture都应该使用相似的密度，这样做可以改善物体的稳定性。 当你添加一个fixture时，物体的质量会自动调整。
     fd.density = 20;
+    // 恢复可以使对象弹起。恢复的值通常设置在0到1之间。想象一个小球掉落到桌子上，值为0表示着小球不会弹起, 这称为非弹性碰撞。值为1表示小球的速度跟原来一样，只是方向相反, 这称为完全弹性碰撞。
     fd.restitution = 0;
+     //摩擦可以使对象逼真地沿其它对象滑动。Box2D支持静摩擦和动摩擦,两者都使用相同的参数。
+    // 摩擦在Box2D中会被精确地模拟,摩擦力的强度与正交力(称之为库仑摩擦)成正比。
+    // 摩擦参数经常会设置在0到1之间, 也能够是其它的非负数，0意味着没有摩擦, 1会产生强摩擦。
+    // 当计算两个形状之间的摩擦时,Box2D必须联合两个形状的摩擦参数。这是通过以下公式完成的:
     fd.friction = 0;
+
     fd.shape = shape;
     body.createFixtureFromFixtureDef(fd);
     //Create a Path for drawing based on vecotor list, rquies a convert to Offset
