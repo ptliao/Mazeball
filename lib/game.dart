@@ -47,25 +47,29 @@ class Contan extends ContactListener {
     // TODO: implement beginContact
     Body bodyA = contact.fixtureA.getBody();
     Body bodyB = contact.fixtureB.getBody();
-    if(bodyA.userData is Ball){
-
+    if (bodyA.userData is Ball) {
+      Ball ball = bodyA.userData;
+      ball.paint.color = Color(0xffff0000);
     }
-//    b2Body* bodyA = contact->GetFixtureA()->GetBody();
-//    b2Body* bodyB = contact->GetFixtureB()->GetBody();
-//    CCSprite* spriteA = (CCSprite*)bodyA->GetUserData();
-//    CCSprite* spriteB = (CCSprite*)bodyB->GetUserData();
-//
-//    //更改碰撞体颜色
-//    if (spriteA != NULL && spriteB != NULL)
-//    {
-//    spriteA.color = ccMAGENTA;
-//    spriteB.color = ccMAGENTA;
-//    }
+    if (bodyB.userData is Ball) {
+      Ball ball = bodyB.userData;
+      ball.paint.color = Color(0xffff0000);
+    }
   }
 
   @override
   void endContact(Contact contact) {
     // TODO: implement endContact
+    Body bodyA = contact.fixtureA.getBody();
+    Body bodyB = contact.fixtureB.getBody();
+    if (bodyA.userData is Ball) {
+      Ball ball = bodyA.userData;
+      ball.paint.color = Color(0xffffffff);
+    }
+    if (bodyB.userData is Ball) {
+      Ball ball = bodyB.userData;
+      ball.paint.color = Color(0xffffffff);
+    }
   }
 
   @override
@@ -89,7 +93,7 @@ class MazeBallGame extends Game {
 
   //Zero vector -> no gravity
 // 设置重力加速度 0.02
-  final Vector2 _gravity = new Vector2(0, -0.02); //Vector2.zero();
+  final Vector2 _gravity = new Vector2(0, 0); //Vector2.zero();
   //Scale factore for our world
   final int scale = 5;
 
@@ -108,8 +112,7 @@ class MazeBallGame extends Game {
   bool blockResize = false;
 
   MazeBallGame({GameView startView = GameView.Playing}) {
-    world = new World.withPool(
-        _gravity, DefaultWorldPool(WORLD_POOL_SIZE, WORLD_POOL_CONTAINER_SIZE));
+    world = new World.withPool(_gravity, DefaultWorldPool(WORLD_POOL_SIZE, WORLD_POOL_CONTAINER_SIZE));
     world.setContactListener(Contan());
     initialize(startView: startView);
   }

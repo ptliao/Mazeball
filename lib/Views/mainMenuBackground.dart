@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:box2d_flame/box2d.dart';
@@ -11,6 +12,7 @@ import 'base/baseView.dart';
 
 class MainMenuBackground extends BaseView {
   Ball player;
+//  Ball player2;
   bool _initRequired = true;
   Wall leftWall;
   Wall topWall;
@@ -27,6 +29,7 @@ class MainMenuBackground extends BaseView {
   @override
   void render(Canvas c) {
     player?.render(c);
+//    player2?.render(c);
     leftWall?.render(c);
     topWall?.render(c);
     rightWall?.render(c);
@@ -42,6 +45,12 @@ class MainMenuBackground extends BaseView {
           scaleVectoreBy(
               Vector2(screenSize.width / 2, (screenSize.height / 100) * 20),
               viewManager.game.screenSize.width / viewManager.game.scale));
+//      player2 = Ball(
+//          viewManager.game,
+//          scaleVectoreBy(
+//              Vector2(screenSize.width / 3, (screenSize.height / 100) * 20),
+//              viewManager.game.screenSize.width / viewManager.game.scale));
+//      player2?.changeRight();
 
       leftWall = Wall(
         viewManager.game,
@@ -78,5 +87,6 @@ class MainMenuBackground extends BaseView {
   @override
   void update(double t) {
     player?.update(t);
+//    player2?.update(t);
   }
 }
